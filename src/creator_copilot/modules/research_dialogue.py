@@ -9,7 +9,8 @@ from creator_copilot.config import AppConfig
 from creator_copilot.models import ConversationLog, DialogueTurn, SearchResult
 from creator_copilot.llm import call_llm_async
 from creator_copilot.search import search_web_async
-from creator_copilot.prompts import ASK_QUESTION, GENERATE_SEARCH_QUERIES, ANSWER_FROM_SOURCES
+from creator_copilot.prompts import ASK_QUESTION, ANSWER_FROM_SOURCES
+from creator_copilot.text_processing import generate_search_queries_deterministic
 
 console = Console()
 
@@ -40,22 +41,13 @@ async def _run_persona_dialogue(topic: str, persona: str, config: AppConfig, pro
             if not question or question.lower().startswith("obrigado"):
                 break
                 
-            # 2. Gerar Termos de Busca (Queries)
+            # 2. Gerar Termos de Busca (Queries) - via código determinístico
             progress.update(task_id, description=f"[bold green]{persona}[/bold green] - Turno {turn_idx + 1}/{config.pipeline.num_dialogue_turns} (Gerando termos de busca...)")
-            queries_prompt = GENERATE_SEARCH_QUERIES.format(
+            queries = generate_search_queries_deterministic(
                 question=question,
+                topic=topic,
                 max_queries=config.search.max_queries_per_turn
             )
-            
-            queries_text = await call_llm_async(
-                prompt=queries_prompt,
-                config=config.llm,
-                is_script=False,
-                system_prompt="Você é um especialista em extrair palavras-chave curtas e precisas para motores de busca."
-            )
-            
-            queries = [q.strip().strip('-').strip('"').strip() for q in queries_text.split('\n') if q.strip()]
-            queries = queries[:config.search.max_queries_per_turn]
             
             # 3. Buscar na Web
             progress.update(task_id, description=f"[bold green]{persona}[/bold green] - Turno {turn_idx + 1}/{config.pipeline.num_dialogue_turns} (Buscando na web...)")

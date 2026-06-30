@@ -25,14 +25,6 @@ Histórico recente da conversa:
 Sua pergunta:
 """
 
-GENERATE_SEARCH_QUERIES = """
-Você deve ajudar a pesquisar na internet a resposta para a seguinte pergunta:
-"{question}"
-
-Gere {max_queries} termos curtos e precisos de busca (queries) que poderiam ser digitados em um buscador para encontrar informações que respondam à pergunta.
-Retorne APENAS as queries, uma por linha, sem marcadores ou numeração.
-"""
-
 ANSWER_FROM_SOURCES = """
 Você é um Especialista no tema "{topic}".
 Sua tarefa é responder à pergunta do Entrevistador baseando-se EXCLUSIVAMENTE nos trechos de informações encontrados na internet fornecidos abaixo.
@@ -63,7 +55,7 @@ Forneça APENAS a estrutura em formato Markdown, com títulos (##) e marcadores 
 """
 
 REFINE_SCRIPT = """
-Você é um roteirista chefe. Você tem um esboço preliminar de um roteiro e um registro completo de pesquisas feitas por diferentes perspectivas.
+Refine e expanda o esboço preliminar usando o Registro de Pesquisas.
 
 Tema: "{topic}"
 Formato: {content_type}
@@ -71,14 +63,12 @@ Formato: {content_type}
 Esboço Preliminar:
 {draft_outline}
 
-Registro de Pesquisas (Diálogos com o Especialista):
+Registro de Pesquisas (Fatos descobertos):
 {conversation_log}
 
-Sua tarefa:
-Refine e expanda o esboço preliminar usando as informações do Registro de Pesquisas.
-- Melhore os tópicos com fatos reais, curiosidades e pontos de discussão descobertos nas pesquisas.
+Instruções:
+- Enriqueça os tópicos com fatos reais, curiosidades e pontos de discussão do Registro de Pesquisas.
 - Crie ganchos interessantes de transição entre os tópicos.
-- Mantenha a estrutura em Markdown.
-- Seja detalhado o suficiente para que o apresentador saiba exatamente o que abordar, mas mantenha em formato de roteiro estruturado (não texto corrido enciclopédico).
-- No final, adicione uma seção "## 📚 Fontes Consultadas" listando as principais URLs mencionadas nas pesquisas.
+- Mantenha um formato de roteiro estruturado.
+- Retorne APENAS o roteiro estruturado em Markdown, sem explicações iniciais ou finais.
 """

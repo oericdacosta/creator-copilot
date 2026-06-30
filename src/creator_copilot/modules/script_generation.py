@@ -7,6 +7,7 @@ from creator_copilot.config import AppConfig
 from creator_copilot.models import ConversationLog
 from creator_copilot.llm import call_llm
 from creator_copilot.prompts import GENERATE_DRAFT_SCRIPT, REFINE_SCRIPT
+from creator_copilot.text_processing import condense_conversation_log, extract_all_urls
 
 console = Console()
 
@@ -41,8 +42,8 @@ def refine_script(topic: str, draft_outline: str, conversation_log: Conversation
     """
     console.print(f"[bold blue]Fase 3: Refinando o roteiro com os dados da pesquisa...[/bold blue]")
     
-    # Prepara o histórico da conversa formatado
-    conv_text = _format_conversation_log(conversation_log)
+    # Prepara o histórico da conversa formatado (agora apenas com fatos, sem as perguntas e URLs repetidas)
+    conv_text = condense_conversation_log(conversation_log)
     
     prompt = REFINE_SCRIPT.format(
         topic=topic,
@@ -58,34 +59,13 @@ def refine_script(topic: str, draft_outline: str, conversation_log: Conversation
         system_prompt="Você é um roteirista chefe que exige precisão e riqueza de detalhes nos roteiros."
     )
     
-    return final_script.strip()
-
-def _format_conversation_log(conversation_log: ConversationLog) -> str:
-    """
-    Formata o histórico inteiro de diálogos num texto único para o LLM processar.
-    Limita o tamanho para evitar estourar o limite de tokens (inspirado no limit_word_count_preserve_newline do STORM).
-    """
-    formatted = []
-    for persona, turns in conversation_log.dialogues.items():
-        if not turns:
-            continue
-        formatted.append(f"--- Pesquisa com a perspectiva: {persona} ---")
-        for turn in turns:
-            formatted.append(f"Entrevistador: {turn.question}")
-            formatted.append(f"Especialista: {turn.answer}")
-            if turn.search_results:
-                # Extrai as URLs e títulos para referenciar
-                refs = [f"[{res.title}]({res.url})" for res in turn.search_results]
-                formatted.append(f"Fontes Utilizadas: {', '.join(refs)}\n")
-            else:
-                formatted.append("\n")
-            
-    full_text = "\n".join(formatted)
+    final_script = final_script.strip()
     
-    # Controle básico de limite de palavras (aproximadamente 5000 palavras, 
-    # o que dá ~6000-7000 tokens dependendo do idioma).
-    words = full_text.split()
-    if len(words) > 5000:
-        return " ".join(words[:5000]) + "\n\n... (histórico truncado devido ao tamanho)"
+    # Extrai as fontes únicas e anexa ao final de forma determinística
+    sources = extract_all_urls(conversation_log)
+    if sources:
+        sources_text = "\n\n## 📚 Fontes Consultadas\n"
+        sources_text += "\n".join([f"- [{s['title']}]({s['url']})" for s in sources])
+        final_script += sources_text
         
-    return full_text
+    return final_script

@@ -7,6 +7,8 @@ from rich.console import Console
 
 from creator_copilot.config import LLMConfig
 
+from langsmith.wrappers import wrap_openai
+
 console = Console()
 
 def call_llm(
@@ -23,6 +25,10 @@ def call_llm(
         raise ValueError(f"Variável de ambiente '{config.api_key_env}' não encontrada no sistema ou no arquivo .env.")
 
     client = OpenAI(api_key=api_key)
+    
+    # Ativa o tracking automático do LangSmith apenas se a chave e o tracing estiverem configurados
+    if os.environ.get("LANGSMITH_API_KEY") and os.environ.get("LANGSMITH_TRACING", "").lower() == "true":
+        client = wrap_openai(client)
     
     model = config.script_model if is_script else config.dialogue_model
     max_tokens = config.max_tokens_script if is_script else config.max_tokens_dialogue

@@ -2,6 +2,8 @@ import os
 import json
 import dataclasses
 from rich.console import Console
+import langsmith
+from langsmith import traceable
 
 from creator_copilot.config import AppConfig
 from creator_copilot.modules.perspective_discovery import discover_perspectives
@@ -14,7 +16,19 @@ class CreatorCopilotEngine:
     def __init__(self, config: AppConfig):
         self.config = config
 
+    @traceable(name="CreatorCopilot Pipeline")
     def run(self, topic: str):
+        run_tree = langsmith.get_current_run_tree()
+        if run_tree:
+            run_tree.metadata.update({
+                "topic": topic,
+                "content_type": self.config.pipeline.content_type,
+                "num_perspectives": self.config.pipeline.num_perspectives,
+                "num_dialogue_turns": self.config.pipeline.num_dialogue_turns,
+                "dialogue_model": self.config.llm.dialogue_model,
+                "script_model": self.config.llm.script_model,
+            })
+            
         console.rule(f"[bold green]Iniciando Creator Copilot: {topic}[/bold green]")
         
         # Cria diretório de saída

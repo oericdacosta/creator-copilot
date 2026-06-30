@@ -1,6 +1,7 @@
 import re
 from typing import List
 from rich.console import Console
+from langsmith import traceable
 
 from creator_copilot.config import AppConfig
 from creator_copilot.llm import call_llm
@@ -8,6 +9,7 @@ from creator_copilot.prompts import DISCOVER_PERSPECTIVES
 
 console = Console()
 
+@traceable(name="Fase 1: Descoberta de Perspectivas")
 def discover_perspectives(topic: str, config: AppConfig) -> List[str]:
     """
     Descobre diferentes ângulos de pesquisa (personas) para o tema usando o LLM.

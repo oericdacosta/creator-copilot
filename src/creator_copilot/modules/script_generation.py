@@ -1,6 +1,7 @@
 import json
 from typing import Dict, Any
 from rich.console import Console
+from langsmith import traceable
 
 from creator_copilot.config import AppConfig
 from creator_copilot.models import ConversationLog
@@ -9,6 +10,7 @@ from creator_copilot.prompts import GENERATE_DRAFT_SCRIPT, REFINE_SCRIPT
 
 console = Console()
 
+@traceable(name="Fase 3: Draft")
 def generate_draft_script(topic: str, config: AppConfig) -> str:
     """
     Passo 1 da Geração: Cria o esboço preliminar sem usar dados da pesquisa,
@@ -31,6 +33,7 @@ def generate_draft_script(topic: str, config: AppConfig) -> str:
     
     return draft_outline.strip()
 
+@traceable(name="Fase 3: Refinamento")
 def refine_script(topic: str, draft_outline: str, conversation_log: ConversationLog, config: AppConfig) -> str:
     """
     Passo 2 da Geração: Usa o rico histórico de pesquisas da Fase 2 para 

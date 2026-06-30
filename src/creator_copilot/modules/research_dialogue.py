@@ -2,6 +2,7 @@ import re
 from typing import List
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
+from langsmith import traceable
 
 from creator_copilot.config import AppConfig
 from creator_copilot.models import ConversationLog, DialogueTurn, SearchResult
@@ -11,6 +12,7 @@ from creator_copilot.prompts import ASK_QUESTION, GENERATE_SEARCH_QUERIES, ANSWE
 
 console = Console()
 
+@traceable(name="Fase 2: Diálogo de Pesquisa")
 def run_research_dialogue(topic: str, personas: List[str], config: AppConfig) -> ConversationLog:
     """
     Executa o diálogo de pesquisa simulado para cada persona.

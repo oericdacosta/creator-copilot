@@ -44,11 +44,17 @@ class OutputConfig:
     format: str
 
 @dataclass
+class LangSmithConfig:
+    enabled: bool
+    project_name: str
+
+@dataclass
 class AppConfig:
     llm: LLMConfig
     search: SearchConfig
     pipeline: PipelineConfig
     output: OutputConfig
+    langsmith: LangSmithConfig
 
 def load_config(config_path: str = "config.yaml") -> AppConfig:
     """Carrega o arquivo de configuração e retorna uma dataclass tipada."""
@@ -62,5 +68,6 @@ def load_config(config_path: str = "config.yaml") -> AppConfig:
         llm=LLMConfig(**data.get("llm", {})),
         search=SearchConfig(**data.get("search", {})),
         pipeline=PipelineConfig(**data.get("pipeline", {})),
-        output=OutputConfig(**data.get("output", {}))
+        output=OutputConfig(**data.get("output", {})),
+        langsmith=LangSmithConfig(**data.get("langsmith", {"enabled": False, "project_name": "default"}))
     )

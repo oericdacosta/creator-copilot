@@ -33,3 +33,8 @@ output:
   save_conversation_log: true            # Salvar log de conversas
   save_search_results: true              # Salvar resultados brutos
   format: "markdown"                     # Formato do roteiro: "markdown" ou "json"
+
+# === LangSmith (Observabilidade) ===
+langsmith:
+  enabled: true                          # Ativar tracking de tokens, latência e custo
+  project_name: "creator-copilot"        # Nome do projeto no painel do LangSmith

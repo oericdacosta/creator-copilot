@@ -45,10 +45,7 @@ def call_llm(
                 top_p=config.top_p
             )
             
-            usage = response.usage
-            if usage:
-                console.print(f"[dim]Tokens: {usage.prompt_tokens} prompt + {usage.completion_tokens} completion = {usage.total_tokens} total ({model})[/dim]")
-                
+              
             content = response.choices[0].message.content
             return content if content is not None else ""
             

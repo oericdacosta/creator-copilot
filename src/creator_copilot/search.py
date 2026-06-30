@@ -1,5 +1,6 @@
 import os
 import time
+import asyncio
 from typing import List
 from tavily import TavilyClient
 from rich.console import Console
@@ -61,3 +62,9 @@ def search_web(queries: List[str], config: SearchConfig) -> List[SearchResult]:
             time.sleep(2)
             
     return collected_results
+
+async def search_web_async(queries: List[str], config: SearchConfig) -> List[SearchResult]:
+    """
+    Versão assíncrona do search_web que usa asyncio.to_thread para não bloquear o event loop.
+    """
+    return await asyncio.to_thread(search_web, queries, config)

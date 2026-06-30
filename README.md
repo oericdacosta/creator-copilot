@@ -47,5 +47,6 @@ No final, todos os arquivos serão salvos magicamente dentro da pasta `output/<s
 Você tem total controle sobre a máquina! Abra o arquivo `config.yaml` na raiz do projeto e brinque com os valores:
 - `num_perspectives`: Quer um vídeo mais profundo? Aumente para 5 ou mais.
 - `num_dialogue_turns`: Define a profundidade das entrevistas. 
+- `max_concurrency`: Define o nível de paralelismo. Aumente para pesquisas mais rápidas ou diminua para evitar _rate limits_ na API.
 - `content_type`: Mude de "Podcast/YouTube" para "Artigo Acadêmico" ou "Documentário Curto".
 - `search_depth`: Use "basic" para economizar, ou "advanced" para extrair páginas inteiras via IA!

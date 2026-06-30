@@ -1,5 +1,6 @@
 import argparse
 import sys
+import asyncio
 from rich.console import Console
 
 from creator_copilot.config import load_config
@@ -22,7 +23,7 @@ def main():
     engine = CreatorCopilotEngine(config)
     
     try:
-        engine.run(args.topic)
+        asyncio.run(engine.run(args.topic))
     except KeyboardInterrupt:
         console.print("\n[yellow]Execução cancelada pelo usuário.[/yellow]")
         sys.exit(0)

@@ -24,6 +24,7 @@ search:
 pipeline:
   num_perspectives: 3                    # Número de ângulos/personas
   num_dialogue_turns: 5                  # Turnos de conversa por persona (M no paper)
+  max_concurrency: 4                     # Nível máximo de paralelismo na pesquisa
   content_type: "video"                  # "video" ou "podcast"
   language: "pt-br"                      # Idioma de saída
 

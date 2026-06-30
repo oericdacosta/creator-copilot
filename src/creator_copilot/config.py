@@ -33,6 +33,7 @@ class SearchConfig:
 class PipelineConfig:
     num_perspectives: int
     num_dialogue_turns: int
+    max_concurrency: int
     content_type: str
     language: str
 

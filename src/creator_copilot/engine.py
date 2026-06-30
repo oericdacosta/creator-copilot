@@ -17,7 +17,7 @@ class CreatorCopilotEngine:
         self.config = config
 
     @traceable(name="CreatorCopilot Pipeline")
-    def run(self, topic: str):
+    async def run(self, topic: str):
         run_tree = langsmith.get_current_run_tree()
         if run_tree:
             run_tree.metadata.update({
@@ -41,7 +41,7 @@ class CreatorCopilotEngine:
         console.print(f"[green]✓ {len(personas)} personas geradas.[/green]")
         
         # Fase 2: Pesquisa Simulada (Diálogos)
-        conversation_log = run_research_dialogue(topic, personas, self.config)
+        conversation_log = await run_research_dialogue(topic, personas, self.config)
         
         # Salva log de conversa (Checkpoint 1)
         conv_log_path = os.path.join(output_dir, "conversation_log.json")

@@ -1,0 +1,35 @@
+# === LLM ===
+llm:
+  api_key_env: "OPENAI_API_KEY"          # Nome da env var (nunca hardcoded)
+  dialogue_model: "gpt-4o-mini"          # Modelo para diálogo e pesquisa (barato)
+  script_model: "gpt-4o"                 # Modelo para geração final (robusto)
+  temperature: 1.0                       # Criatividade alta (conforme o paper)
+  top_p: 0.9
+  max_tokens_dialogue: 500
+  max_tokens_script: 4000
+  max_retries: 5                         # Máximo de tentativas em caso de erro da API
+  base_delay: 2                          # Tempo de espera base para o retry (em segundos)
+
+# === Pesquisa ===
+search:
+  api_key_env: "TAVILY_API_KEY"          # Nome da env var do Tavily
+  engine: "tavily"                       # Motor de busca
+  search_depth: "basic"                  # Profundidade da busca ("basic" ou "advanced")
+  top_k: 3                               # Resultados por query
+  max_queries_per_turn: 3                # Queries geradas por pergunta
+  region: "br-pt"                        # Região de busca (Brasil)
+  safe_search: "moderate"
+
+# === Pipeline ===
+pipeline:
+  num_perspectives: 3                    # Número de ângulos/personas
+  num_dialogue_turns: 5                  # Turnos de conversa por persona (M no paper)
+  content_type: "video"                  # "video" ou "podcast"
+  language: "pt-br"                      # Idioma de saída
+
+# === Output ===
+output:
+  dir: "./output"                        # Diretório de saída
+  save_conversation_log: true            # Salvar log de conversas
+  save_search_results: true              # Salvar resultados brutos
+  format: "markdown"                     # Formato do roteiro: "markdown" ou "json"
